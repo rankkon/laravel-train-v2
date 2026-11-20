@@ -1,0 +1,367 @@
+.leave-create-page {
+    min-height: 100vh;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    background: #FFFFFF;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000000;
+}
+
+.leave-create,
+.leave-create * {
+    box-sizing: border-box;
+}
+
+.leave-create-page .leave-create {
+    position: fixed;
+    top: 75px;
+    right: 0;
+    bottom: 0;
+    left: 269px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    min-height: 0;
+    padding: 24px;
+}
+
+.leave-form-title {
+    flex: none;
+    margin: 0;
+    font: inherit;
+    line-height: 20px;
+}
+
+.leave-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 16px;
+    width: 100%;
+    max-width: 100%;
+    min-height: 0;
+    margin: 0;
+}
+
+.leave-form-fields {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
+    padding-right: 20px;
+}
+
+.leave-form-field {
+    display: grid;
+    grid-template-columns: 140px minmax(0, 450px);
+    align-items: start;
+    column-gap: 12px;
+    margin-bottom: 12px;
+}
+
+.leave-form-field:last-child {
+    margin-bottom: 0;
+}
+
+.leave-form-field > label {
+    position: relative;
+    padding-top: 6px;
+    padding-left: 16px;
+    line-height: 19px;
+}
+
+.leave-form .required-marker {
+    position: absolute;
+    left: 0;
+    color: #BD0101;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.leave-form-field input,
+.leave-form-field textarea,
+.leave-form-field select {
+    width: 100%;
+    min-width: 0;
+    height: 32px;
+    margin: 0;
+    padding: 5px 10px;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.5);
+    font: inherit;
+    line-height: 20px;
+    color: #000000;
+}
+
+.leave-form-content textarea {
+    height: 72px;
+    width: 100%;
+    min-height: 52px;
+    resize: vertical;
+}
+
+.leave-select-control,
+.leave-date-control,
+.leave-attachment-control {
+    width: 50%;
+}
+
+.leave-select-control {
+    position: relative;
+    min-width: 0;
+    height: 32px;
+}
+
+.leave-select-control select {
+    appearance: none;
+    padding: 5px 32px 5px 10px;
+    background: #FFFFFF;
+    color: #1E1E1E;
+}
+
+.leave-select-control::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 16px;
+    height: 16px;
+    transform: translateY(-50%);
+    background: #1E1E1E;
+    clip-path: polygon(25% 30%, 50% 55%, 75% 30%, 82.5% 37.5%, 50% 70%, 17.5% 37.5%);
+    pointer-events: none;
+}
+
+.leave-date-control {
+    position: relative;
+    min-width: 0;
+}
+
+.leave-form-date input::-webkit-calendar-picker-indicator {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    background: url('calendar.svg') center / contain no-repeat;
+    cursor: pointer;
+}
+
+.leave-attachment-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.leave-file-control {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    height: 32px;
+}
+
+.leave-file-control input {
+    padding-right: 36px;
+    color: transparent;
+    cursor: pointer;
+}
+
+.leave-file-control input::file-selector-button {
+    display: none;
+}
+
+.leave-file-name {
+    position: absolute;
+    top: 50%;
+    right: 36px;
+    left: 11px;
+    transform: translateY(-50%);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 20px;
+    pointer-events: none;
+}
+
+.leave-preview-button {
+    flex: none;
+    width: 32px;
+    height: 32px;
+    padding: 5px;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    background: #FFFFFF;
+    color: #000000;
+    cursor: pointer;
+}
+
+.leave-preview-button svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
+
+.leave-preview-button:hover {
+    background: #EAF5FC;
+}
+
+.leave-preview-dialog {
+    box-sizing: border-box;
+    width: 500px;
+    height: 500px;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 32px);
+    margin: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #000000;
+}
+
+.leave-preview-dialog[open] {
+    display: grid;
+    place-items: center;
+}
+
+.leave-preview-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.65);
+}
+
+.leave-file-preview {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.leave-upload-icon {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.leave-upload-icon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #000000;
+    clip-path: polygon(12px 4px, 18px 10px, 16.5px 11.5px, 13px 8px, 13px 16px, 11px 16px, 11px 8px, 7.5px 11.5px, 6px 10px);
+}
+
+.leave-upload-icon::after {
+    content: '';
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    left: 4px;
+    height: 6px;
+    border: 2px solid #000000;
+    border-top: 0;
+    border-radius: 0 0 2px 2px;
+}
+
+.leave-form-field > p {
+    grid-column: 2;
+    margin: 6px 0 0;
+    overflow-wrap: anywhere;
+    line-height: 20px;
+}
+
+.leave-form .leave-input-error {
+    border-color: #F90A0A;
+    outline-color: #F90A0A;
+}
+
+.leave-form-error {
+    margin: 0 0 12px;
+    color: #F90A0A;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.leave-form-actions {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 0;
+    padding-left: 132px;
+}
+
+.leave-form-actions button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 220px;
+    max-width: 100%;
+    min-width: 0;
+    height: 50px;
+    padding: 4px 24px;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19px;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.leave-form-next {
+    background: #007EC6;
+}
+
+.leave-form-clear {
+    background: #E2005C;
+}
+
+.leave-form-next:hover {
+    background: #006EAD;
+}
+
+.leave-form-next:active {
+    background: #005F96;
+}
+
+.leave-form-clear:hover {
+    background: #C60050;
+}
+
+.leave-form-clear:active {
+    background: #AA0045;
+}
+
+@media (max-width: 1000px) {
+    .leave-create-page .leave-create {
+        padding: 16px;
+    }
+
+    .leave-form-actions {
+        padding-left: 0;
+    }
+}
+
+@media (max-width: 760px) {
+    .leave-form-field {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 6px;
+    }
+
+    .leave-form-field > label {
+        padding-top: 0;
+    }
+
+    .leave-form-field > p {
+        grid-column: 1;
+        margin-top: 4px;
+    }
+}
