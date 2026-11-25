@@ -18,7 +18,7 @@ class DashboardController extends Controller
     public function index(Request $request) : View {
         $query = Leave::join('users','users.id','=','leave.user_id'); // Khởi tạo truy vấn
         if($request->user()->user_type !== AppConstants::TYPE_ADMIN){
-            $query->where('user.department', $request->user()->department); // Lấy đơn theo phòng ban nếu user không phải admin
+            $query->where('users.department', $request->user()->department); // Lấy đơn theo phòng ban nếu user không phải admin
         }
 
         $query->orderBy('leave.status')->orderByDesc('leave.created_at')->orderBy('leave.id'); // Sắp xếp đơn theo trạng thái, thời điểm tạo, id
