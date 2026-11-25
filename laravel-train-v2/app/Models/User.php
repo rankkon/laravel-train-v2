@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,6 +14,7 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    protected $table   = 'users'; // Khai báo tên bảng
     public $timestamps = false; // Không dùng cập nhật tự động created_at và update_at
 
     //Khai báo kiểu dữ liệu cho users
@@ -31,6 +30,4 @@ class User extends Authenticatable
             'update_at'       => 'datetime:Y-m-d H:i:s', 
         ];
     }
-
-
 }

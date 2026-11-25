@@ -14,7 +14,7 @@
         <main class="login-container">
             <h1 class="login-title">Sanshin IT Solution</h1>
 
-            {{-- Form gửi POST và hiển thị lỗi do server trả về; không điền lại mật khẩu sau lần đăng nhập lỗi. --}}
+            {{-- Form gửi POST và hiển thị lỗi do server trả về --}}
             <form method="post" action="{{ route('login.submit') }}" novalidate>
                 @csrf
                 <div class="login-field login-username">
@@ -29,7 +29,7 @@
                         placeholder=" "
                         required
                     >
-                    <span class="login-placeholder">Tên đăng nhập</span> {{-- Placeholder được CSS ẩn khi ô nhập có dữ liệu. --}}
+                    <span class="login-placeholder">Tên đăng nhập</span>
                 </div>
 
                 <div class="login-field login-password">

@@ -45,8 +45,8 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $usernameError = $validator->errors()->has('username');
-        $passWordError = $validator->errors()->has('password');
+        $usernameError = $validator->errors()->has('username'); // Check lỗi của trường username
+        $passWordError = $validator->errors()->has('password'); // Check lỗi của trường password
         $username = $usernameError ? '' : $request->input('username');
         $password = $passWordError ? '' : $request->input('password');
         $loginErrorMessage = __('messages.login_failed');
@@ -54,18 +54,18 @@ class AuthController extends Controller
         if(! $usernameError && ! $passWordError){
             $user = User::query()->where('username', $username)->first();
 
-            if(! $user){
+            if(! $user){ // Kiểm tra user tồn tại
                 $usernameError = true;
             }
-            elseif($user->status !== AppConstants::STATUS_ACTIVE){
+            elseif($user->status !== AppConstants::STATUS_ACTIVE){ // Kiểm tra user còn hoạt động
                 $usernameError = true;
             }
-            elseif(!Hash::check($password, $user->password_hash)){
+            elseif(!Hash::check($password, $user->password_hash)){ // Kiểm tra mật khẩu 
                 $passWordError = true;
             }
             else{
-                Auth::login($user);
-                return redirect()->route($user->password_status === 0 ? 'password.edit' : 'dashboard');
+                Auth::login($user); // login thành công
+                return redirect()->route($user->password_status === 0 ? 'password.edit' : 'dashboard'); // Chuyển hướng về trang dashboard hoặc đổi mật khẩu lần đầu
             }
         }
         
@@ -75,5 +75,13 @@ class AuthController extends Controller
             'passwordError' => $passWordError,
             'loginErrorMessage' => $loginErrorMessage,
         ]);
+    }
+
+    // Xử lý logout
+    public function logout(Request $request) : RedirectResponse {
+        Auth::logout(); // Thoát trạng lái login
+        $request->session()->invalidate(); // Xóa session cũ
+        $request->session()->regenerateToken(); // Tạo token mới
+        return redirect()->route('login');
     }
 }
