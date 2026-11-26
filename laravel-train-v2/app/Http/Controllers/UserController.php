@@ -220,7 +220,7 @@ class UserController extends Controller
     }
 
     // Danh sách lựa chọn vai trò và phòng ban khi thêm, sửa user
-    public function formOptions(User $viewer, ?User $user = null) : array {
+    private function formOptions(User $viewer, ?User $user = null) : array {
         $userTypes = [
         AppConstants::TYPE_USER    => 'User',
         AppConstants::TYPE_MANAGER => 'Manager',

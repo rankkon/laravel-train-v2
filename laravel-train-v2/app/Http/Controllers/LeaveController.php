@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -69,9 +70,6 @@ class LeaveController extends Controller
 
         $columns = ['leave.id', 'users.full_name', 'leave.user_id', 'leave.approver_id', 'leave.leave_type', 'leave.created_at', 'leave.end_date', 'leave.title', 'leave.status'];
         $leaves = $query->paginate(15, $columns); // Lấy danh sách đơn theo từng trang
-        if($leaves->isEmpty() && $leaves->CurrentPage() > 1){
-            $leaves->paginate(15, $columns, page: $leaves->lastPage()); // Lấy dữ liệu trang cuối nếu trang request rỗng
-        }
         $leaves->withQueryString(); // Giữ bộ lọc khi chuyển trang
 
         return view($request->ajax() ? 'leaves.partials.list' : 'leaves.index', [
@@ -80,5 +78,95 @@ class LeaveController extends Controller
             'sortColumn'    => $sortColumn,
             'sortDirection' => $sortDirection
         ]); 
+    }
+
+    // Hiện form tạo đơn
+    public function create(Request $request) : View {
+        $leave = new Leave(['start_date' => today(), 'end_date' => today()]);
+
+        return view('leaves.form', [
+            'leave'     => $leave,
+            'approvers' => $this->approvers($request->user())
+        ]);
+    }
+
+    // Hiện form sửa đơn
+    public function edit(Request $request, Leave $leave) : View {
+        return view('leaves.form', [
+            'leave'     => $leave,
+            'approvers' => $this->approvers($request->user())
+        ]);
+    }
+    
+    // Xử lý lưu đơn
+    public function store(Request $request, Leave $leave) : JsonResponse {
+        $data = $request->validate([
+            'title'       => 'required',
+            'content'     => 'nullable',
+            'approver_id' => ['required', Rule::in($this->approvers($request->user())->modelKeys())],
+            'leave_type'  => ['required', Rule::in(array_keys(AppConstants::LEAVE_TYPES))],
+            'start_date'  => 'required|date_format:Y-m-d|after_or_equal:today',
+            'end_date'    => 'required|date_format:Y-m-d|after_or_equal:start_date',
+            'attachment'  => 'nullable|mimes:jpg,jpeg,png,gif'
+        ]);
+        unset($data['attachment']);
+
+        DB::beginTransaction();
+        try {
+            $attachment = $this->storeAttachment($request);
+            $leave = Leave::create($data + $attachment + [
+                'user_id'                  => $request->user()->id,
+                'status'                   => AppConstants::STATUS_NEW,
+                'created_at'               => now(),
+                'attachment_original_name' => '',
+                'attachment_path'          => ''
+            ]);
+            DB::commit();
+        } catch (Throwable $e){
+            DB::rollBack();
+            throw $e;
+        }
+        return response()->json(['redirect' => route('leaves.index')]);
+    }
+
+    // Xử lý sửa đơn
+    public function update(Request $request, Leave $leave) : JsonResponse {
+        $data = $request->validate([
+            'title'       => 'required',
+            'content'     => 'nullable',
+            'approver_id' => ['required', Rule::in($this->approvers($request->user())->modelKeys())],
+            'leave_type'  => ['required', Rule::in(array_keys(AppConstants::LEAVE_TYPES))],
+            'start_date'  => 'required|date_format:Y-m-d',
+            'end_date'    => 'required|date_format:Y-m-d|after_or_equal:start_date',
+            'attachment'  => 'nullable|mimes:jpg,jpeg,png,gif'
+        ]);
+        unset($data['attachment']);
+
+        DB::beginTransaction();
+        try {
+            $leave = Leave::where('id', $leave->id)->lockForUpdate()->First();
+            $attachment = $this->storeAttachment($request);
+            $oldPath    = $leave->attachment_path;
+            $leave->update($data + $attachment);
+
+            if($oldPath && $oldPath !== $leave->attachment_path){
+                DB::afterCommit(fn() => $this->DeleteUnusedAttachment($oldPath));
+            }
+            DB::commit();
+        } catch (Throwable $e){
+            DB::rollBack();
+            throw $e;
+        }
+        return response()-> json(['redirect' => route('leaves.index')]);
+    }
+
+    private function approvers(User $user) : Collection {
+        $query = User::where('status', AppConstants::STATUS_ACTIVE);
+        if($user->user_type === AppConstants::TYPE_USER){
+            $query->where('user_type', AppConstants::TYPE_MANAGER)->where('department', $user->department);
+        } elseif($user->user_type === AppConstants::TYPE_MANAGER){
+            $query->where('user_type', AppConstants::TYPE_ADMIN);
+        }
+        return $query->orderBy('id')->get(['id', 'full_name']);
     }
 }
