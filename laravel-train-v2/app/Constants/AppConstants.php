@@ -4,9 +4,9 @@ namespace App\Constants;
 
 class AppConstants
 {
-    public const TYPE_USER = 1;
+    public const TYPE_USER    = 1;
     public const TYPE_MANAGER = 2;
-    public const TYPE_ADMIN = 3;
+    public const TYPE_ADMIN   = 3;
 
     public const STATUS_ACTIVE = 1;
     public const STATUS_LOCKED = 0;
@@ -32,13 +32,13 @@ class AppConstants
         5 => 'Sản xuất',
     ];
 
-    public const STATUS_NEW = 0;
-    public const STATUS_APPROVED = 1;
+    public const STATUS_NEW       = 0;
+    public const STATUS_APPROVED  = 1;
     public const STATUS_CANCELLED = 2;
 
-    public const TYPE_NGHIPHEP = 1;
-    public const TYPE_VATTU = 2;
-    public const TYPE_GIOLAM = 3;
+    public const TYPE_NGHIPHEP      = 1;
+    public const TYPE_VATTU         = 2;
+    public const TYPE_GIOLAM        = 3;
     public const TYPE_CHIPHICONGTAC = 4;
 
     public const LEAVE_TYPES = [

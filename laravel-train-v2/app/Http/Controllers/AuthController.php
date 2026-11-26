@@ -70,9 +70,9 @@ class AuthController extends Controller
         }
         
         return view('auth.login', [
-            'username' => $username,
-            'usernameError' => $usernameError,
-            'passwordError' => $passWordError,
+            'username'          => $username,
+            'usernameError'     => $usernameError,
+            'passwordError'     => $passWordError,
             'loginErrorMessage' => $loginErrorMessage,
         ]);
     }

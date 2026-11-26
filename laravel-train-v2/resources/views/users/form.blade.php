@@ -60,7 +60,7 @@
                 <div class="user-form-field">
                     <label for="user-type"><span class="required-marker">*</span> Loại người dùng</label>
                     <div class="user-select-control">
-                        <select id="user-type" name="user_type" required @disabled($user->user_type === \App\Constants\AppConstants::TYPE_ADMIN)
+                        <select id="user-type" name="user_type" required
                             aria-describedby="user-type-error" data-required-message="{{ __('validation.custom.user_type.in') }}">
                             @foreach ($userTypes as $code => $name)
                                 <option value="{{ $code }}" @selected(($user->user_type ?? \App\Constants\AppConstants::TYPE_USER) === $code)>{{ $name }}</option>

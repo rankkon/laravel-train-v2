@@ -25,12 +25,9 @@ class DashboardController extends Controller
 
         $columns = ['leave.id','leave.leave_type','users.full_name','leave.created_at','leave.status','leave.end_date','leave.title']; // 
         $leaves = $query->paginate(15, $columns); // Lấy danh sách đơn chia theo từng trang
-        if($leaves->isEmpty() && $leaves->currentPage() > 1){
-            $leaves = $query->paginate(15, $columns, page:$leaves->lastPage()); // Lấy trang cuối khi trang request trống
-        }
         return view('dashboard.index', [
-            'leaves'      => $leaves,
-            'leaveTypes'  => AppConstants::LEAVE_TYPES,
+            'leaves'        => $leaves,
+            'leaveTypes'    => AppConstants::LEAVE_TYPES,
             'leaveStatuses' => AppConstants::LEAVE_STATUSES,
         ]);
     }

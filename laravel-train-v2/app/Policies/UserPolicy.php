@@ -7,18 +7,6 @@ use App\Models\User;
 
 class UserPolicy
 {
-
-    public function viewAny(User $user): bool
-    {
-        return false;
-    }
-
-
-    public function view(User $user, User $model): bool
-    {
-        return false;
-    }
-
     // Quyền thêm mới user
     public function create(User $user): bool
     {
@@ -43,18 +31,10 @@ class UserPolicy
             && $targetUser->department === $user->department;
     }
 
-    public function delete(User $user, User $model): bool
+    // Quyền sử dụng chức năng khóa nhiều tài khoản
+    public function bulkLock(User $viewer): bool
     {
-        return false;
-    }
-
-    public function restore(User $user, User $model): bool
-    {
-        return false;
-    }
-
-    public function forceDelete(User $user, User $model): bool
-    {
-        return false;
+        return $viewer->status === AppConstants::STATUS_ACTIVE
+            && in_array($viewer->user_type, [AppConstants::TYPE_ADMIN, AppConstants::TYPE_MANAGER], true);
     }
 }

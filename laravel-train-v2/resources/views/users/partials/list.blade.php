@@ -30,6 +30,8 @@
         <button type="submit" form="user-search-form" class="leave-search-button">Tìm kiếm</button>
         @can('create', \App\Models\User::class)
             <a href="{{ route('users.create') }}" class="leave-add">Thêm mới</a>
+        @endcan
+        @can('bulkLock', \App\Models\User::class)
             <button type="button" id="user-bulk-lock" class="leave-add leave-cancel" disabled>Khóa nhiều</button>
         @endcan
     </div>
@@ -71,14 +73,17 @@
             <tbody>
                 {{-- Chỉ hiển thị thao tác trên những tài khoản mà người xem có quyền quản lý. --}}
                 @forelse ($users as $user)
+                    @php
+                        $canManage = auth()->user()->can('update', $user);
+                    @endphp
                     <tr>
-                        <td><input type="checkbox" name="user_ids[]" value="{{ $user->id }}" @cannot('manage', $user) disabled @endcannot></td>
+                        <td><input type="checkbox" name="user_ids[]" value="{{ $user->id }}" @disabled(! $canManage)></td>
                         <td>{{ str_pad((string) $user->id, \App\Constants\AppConstants::USER_CODE_LENGTH, '0', STR_PAD_LEFT) }}</td>
                         <td title="{{ $user->full_name }}">{{ $user->full_name }}</td>
                         <td>{{ $user->created_at->format('Y-m-d') }}</td>
                         <td>{{ \App\Constants\AppConstants::USER_STATUSES[$user->status] }}</td>
                         <td>
-                            @can('manage', $user)
+                            @if ($canManage)
                                 <div class="user-row-actions">
                                     <a href="{{ route('users.edit', $user) }}" class="user-edit" title="Sửa">✎</a>
                                     @if ($user->status === \App\Constants\AppConstants::STATUS_ACTIVE)
@@ -97,7 +102,7 @@
                                         </button>
                                     @endif
                                 </div>
-                            @endcan
+                            @endif
                         </td>
                     </tr>
                 @empty
