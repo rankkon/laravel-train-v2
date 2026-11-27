@@ -1,7 +1,7 @@
-{{-- CSS vẽ vòng quay. Dialog mặc định đóng và dùng đoạn "Đang xử lý" làm tên. --}}
-<dialog id="loading-dialog" class="loading-dialog" aria-labelledby="loading-message">
+{{-- CSS vẽ vòng quay. JavaScript mở dialog khi bắt đầu xử lý. --}}
+<dialog id="loading-dialog" class="loading-dialog">
     <span class="loading-spinner"></span>
-    <p id="loading-message" role="status">{{ __('messages.processing') }}</p>
+    <p>{{ __('messages.processing') }}</p>
 </dialog>
 
 <script>

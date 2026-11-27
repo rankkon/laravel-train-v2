@@ -16,13 +16,13 @@
                 <table class="leave-table">
                     <thead>
                         <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Người dùng</th>
-                            <th scope="col">Loại đơn</th>
-                            <th scope="col">Ngày lập</th>
-                            <th scope="col">Trạng thái</th>
-                            <th scope="col">Ngày duty</th>
-                            <th scope="col">Mô tả</th>
+                            <th>STT</th>
+                            <th>Người dùng</th>
+                            <th>Loại đơn</th>
+                            <th>Ngày lập</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày duty</th>
+                            <th>Mô tả</th>
                         </tr>
                     </thead>
                     <tbody>

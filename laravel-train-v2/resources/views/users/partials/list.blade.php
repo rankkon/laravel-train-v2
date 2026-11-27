@@ -13,10 +13,10 @@
             <input type="hidden" name="direction" value="{{ $sortDirection }}">
         @endif
         <label for="user-search">Mã/Tên user</label>
-        <input type="text" id="user-search" name="q" value="{{ $search }}">
+        <input type="text" id="user-search" name="search" value="{{ $search }}">
         <details id="user-status" class="user-status-filter">
             <summary title="Trạng thái người dùng">{{ $statusOptions[$statusFilter] ?? $statusOptions[''] }}</summary>
-            <div class="user-status-options" role="group" aria-label="Trạng thái người dùng">
+            <div class="user-status-options">
                 @foreach ($statusOptions as $value => $label)
                     <label>
                         <input type="radio" name="status" value="{{ $value }}" @checked($statusFilter === (string) $value)>
@@ -36,13 +36,12 @@
         @endcan
     </div>
 </div>
-{{-- Khung bảng dùng chung cách cuộn ngang và dọc với danh sách đơn. --}}
 <div class="leave-table-container">
     <div class="leave-table-scroll">
         <table class="leave-table user-table">
             <thead>
                 <tr>
-                    <th scope="col"><input type="checkbox" id="select-all-users"></th>
+                    <th><input type="checkbox" id="select-all-users"></th>
                     @foreach ([
                         'id'         => 'Mã người dùng',
                         'full_name'  => 'Tên người dùng',
@@ -53,20 +52,20 @@
                             $isSorted      = $sortColumn === $column;
                             $nextDirection = $isSorted ? ($sortDirection === 'asc' ? 'desc' : '') : 'asc';
                             $sortIcon      = $isSorted ? ($sortDirection === 'asc' ? '↑' : '↓') : '↕';
-                            $parameters    = ['q' => $search, 'status' => $statusFilter];
+                            $parameters    = ['search' => $search, 'status' => $statusFilter];
                             if ($nextDirection !== '') {
                                 $parameters['sort']      = $column;
                                 $parameters['direction'] = $nextDirection;
                             }
                         @endphp
-                        <th scope="col" @if ($isSorted) aria-sort="{{ $sortDirection === 'asc' ? 'ascending' : 'descending' }}" @endif>
+                        <th>
                             <a href="{{ route('users.index', $parameters) }}" @class(['leave-sort-link', 'leave-sort-active' => $isSorted])>
                                 <span>{{ $label }}</span>
-                                <span class="leave-sort-icon" aria-hidden="true">{{ $sortIcon }}</span>
+                                <span class="leave-sort-icon">{{ $sortIcon }}</span>
                             </a>
                         </th>
                     @endforeach
-                    <th scope="col">Hành động</th>
+                    <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>

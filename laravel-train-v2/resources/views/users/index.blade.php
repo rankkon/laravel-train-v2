@@ -10,7 +10,7 @@
 
 @section('content')
     <main class="leave-list">
-        <p id="user-message" role="alert" hidden></p>
+        <p id="user-message" hidden></p>
         <div id="user-list" class="leave-list-content" data-bulk-url="{{ route('users.bulk-lock') }}">
             @include('users.partials.list')
         </div>

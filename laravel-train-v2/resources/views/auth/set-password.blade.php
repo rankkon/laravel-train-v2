@@ -7,12 +7,12 @@
 @endsection
 
 @section('content')
-    <dialog id="password-setup-dialog" class="popup-dialog password-setup-dialog" closedby="none" aria-labelledby="password-setup-title">
+    <dialog id="password-setup-dialog" class="popup-dialog password-setup-dialog" closedby="none">
         <div class="popup-header">
-            <h2 id="password-setup-title" class="popup-title">{{ __('messages.password_setup_title') }}</h2>
+            <h2 class="popup-title">{{ __('messages.password_setup_title') }}</h2>
         </div>
 
-        <p id="password-setup-description" class="password-setup-description">{{ __('messages.password_setup_description') }}</p>
+        <p class="password-setup-description">{{ __('messages.password_setup_description') }}</p>
 
         <form id="password-setup-form" method="post" action="{{ route('password.update') }}" novalidate>
             @csrf
@@ -21,15 +21,15 @@
                     <label for="new-password">Mật khẩu mới <span class="password-setup-required">*</span></label>
                     <input type="password" id="new-password" name="password" autocomplete="new-password" required
                         data-required-message="{{ __('validation.custom.password.required') }}">
-                    <p id="new-password-error" class="password-setup-error" data-form-error="password" role="alert" hidden></p>
+                    <p id="new-password-error" class="password-setup-error" data-form-error="password" hidden></p>
                 </div>
                 <div>
                     <label for="password-confirmation">Xác nhận mật khẩu <span class="password-setup-required">*</span></label>
                     <input type="password" id="password-confirmation" name="password_confirmation" autocomplete="new-password" required
                         data-mismatch-message="{{ __('validation.custom.password.confirmed') }}">
-                    <p id="password-confirmation-error" class="password-setup-error" data-form-error="password_confirmation" role="alert" hidden></p>
+                    <p id="password-confirmation-error" class="password-setup-error" data-form-error="password_confirmation" hidden></p>
                 </div>
-                <p class="password-setup-error" data-form-error="form" role="alert" hidden></p>
+                <p class="password-setup-error" data-form-error="form" hidden></p>
             </div>
             <div class="popup-actions">
                 <button type="submit" class="popup-button popup-confirm">Lưu mật khẩu</button>

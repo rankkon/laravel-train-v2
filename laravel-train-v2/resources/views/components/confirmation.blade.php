@@ -10,7 +10,7 @@
     data-approve="{{ __('messages.confirm_approve') }}"
     data-error="{{ __('messages.page_error') }}">
     <header class="popup-header">
-        <h2 id="confirmation-title" class="popup-title">{{ __('messages.confirmation_title') }}</h2>
+        <h2 class="popup-title">{{ __('messages.confirmation_title') }}</h2>
         <button type="button" class="popup-close" data-dismiss title="Đóng"></button>
     </header>
     <p class="popup-message"></p>

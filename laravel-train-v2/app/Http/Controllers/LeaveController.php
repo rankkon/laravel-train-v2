@@ -113,7 +113,7 @@ class LeaveController extends Controller
             'end_date'    => 'required|date_format:Y-m-d|after_or_equal:start_date',
             'attachment'  => 'nullable|mimes:jpg,jpeg,png,gif'
         ]);
-        unset($data['attachment']);
+        unset($data['attachment']); // Bỏ khóa file đính kèm
 
         DB::beginTransaction();
         try {
@@ -144,17 +144,17 @@ class LeaveController extends Controller
             'end_date'    => 'required|date_format:Y-m-d|after_or_equal:start_date',
             'attachment'  => 'nullable|mimes:jpg,jpeg,png,gif'
         ]);
-        unset($data['attachment']);
+        unset($data['attachment']); // Bỏ khóa file đính kèm
 
         DB::beginTransaction();
         try {
             $leave = Leave::where('id', $leave->id)->lockForUpdate()->First();
             $attachment = $this->storeAttachment($request);
-            $oldPath    = $leave->attachment_path;
+            $oldPath    = $leave->attachment_path; // Lấy đường dẫn file cũ
             $leave->update($data + $attachment);
 
             if($oldPath && $oldPath !== $leave->attachment_path){
-                DB::afterCommit(fn() => $this->DeleteUnusedAttachment($oldPath));
+                DB::afterCommit(fn() => $this->DeleteUnusedAttachment($oldPath)); // Xóa đường dẫn file cũ nếu upload file mới
             }
             DB::commit();
         } catch (Throwable $e){
@@ -202,9 +202,9 @@ class LeaveController extends Controller
     private function approvers(User $user) : Collection {
         $query = User::where('status', AppConstants::STATUS_ACTIVE);
         if($user->user_type === AppConstants::TYPE_USER){
-            $query->where('user_type', AppConstants::TYPE_MANAGER)->where('department', $user->department);
+            $query->where('user_type', AppConstants::TYPE_MANAGER)->where('department', $user->department); // Lấy danh sách manager cùng phong ban nếu là User
         } elseif($user->user_type === AppConstants::TYPE_MANAGER){
-            $query->where('user_type', AppConstants::TYPE_ADMIN);
+            $query->where('user_type', AppConstants::TYPE_ADMIN); // Lấy danh sách admin nếu là Manager
         }
         return $query->orderBy('id')->get(['id', 'full_name']);
     }
@@ -237,5 +237,14 @@ class LeaveController extends Controller
         } catch (Throwable $e) {
             report($e);
         }
+    }
+
+    // Xem trước ảnh đính kèm
+    public function preview(Leave $leave) : StreamedResponse {
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('local');
+        abort_unless($disk->exists($leave->attachment_path), 404);
+
+        return $disk->response($leave->attachment_path);
     }
 }

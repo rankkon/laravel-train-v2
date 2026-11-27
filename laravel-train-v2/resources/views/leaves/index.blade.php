@@ -9,7 +9,7 @@
 
 @section('content')
     <main class="leave-list">
-        <p id="leave-message" role="alert" hidden></p>
+        <p id="leave-message" hidden></p>
         <div id="leave-list" class="leave-list-content">
             @include('leaves.partials.list')
         </div>

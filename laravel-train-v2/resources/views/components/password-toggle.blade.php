@@ -1,6 +1,6 @@
 {{-- Nút con mắt dùng ở login và form sửa người dùng. type="button" giữ thao tác trong trình duyệt. --}}
-<button type="button" class="password-toggle" aria-controls="password" aria-label="Hiện mật khẩu" aria-pressed="false" title="Hiện mật khẩu">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+<button type="button" class="password-toggle" aria-pressed="false" title="Hiện mật khẩu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
         <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
         <circle cx="12" cy="12" r="3" />
         {{-- CSS bật nét gạch chéo khi mật khẩu đang hiện. --}}
@@ -19,7 +19,6 @@
         passwordInput.type = showPassword ? 'text' : 'password';
 
         toggleButton.title = label;
-        toggleButton.setAttribute('aria-label', label);
 
         // ghi trạng thái hiện tại và được CSS dùng để đổi icon
         toggleButton.setAttribute('aria-pressed', String(showPassword));

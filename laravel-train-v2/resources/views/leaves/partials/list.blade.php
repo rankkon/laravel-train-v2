@@ -6,7 +6,7 @@
             <input type="hidden" name="sort" value="{{ $sortColumn }}">
             <input type="hidden" name="direction" value="{{ $sortDirection }}">
         @endif
-        <input type="text" id="leave-search" name="q" value="{{ $search }}">
+        <input type="text" id="leave-search" name="search" value="{{ $search }}">
     </form>
     <div class="leave-list-actions">
         <button type="submit" form="leave-search-form" class="leave-search-button">Tìm kiếm</button>
@@ -33,24 +33,21 @@
                             $isSorted       = $sortColumn === $column;
                             $nextDirection  = $isSorted ? ($sortDirection === 'asc' ? 'desc' : '') : 'asc';
                             $sortIcon       = $isSorted ? ($sortDirection === 'asc' ? '↑' : '↓') : '↕';
-                            $sortParameters = ['q' => $search];
-                            $sortAction     = 'trở về thứ tự mặc định';
+                            $sortParameters = ['search' => $search];
                             if ($nextDirection !== '') {
                                 $sortParameters['sort']      = $column;
                                 $sortParameters['direction'] = $nextDirection;
-                                $sortAction                  = $nextDirection === 'asc' ? 'sắp xếp tăng dần' : 'sắp xếp giảm dần';
                             }
                         @endphp
-                        <th scope="col" @if ($isSorted) aria-sort="{{ $sortDirection === 'asc' ? 'ascending' : 'descending' }}" @endif>
+                        <th>
                             <a href="{{ route('leaves.index', $sortParameters) }}"
-                               class="leave-sort-link{{ $isSorted ? ' leave-sort-active' : '' }}"
-                               aria-label="{{ $label }}: {{ $sortAction }}">
+                               class="leave-sort-link{{ $isSorted ? ' leave-sort-active' : '' }}">
                                 <span>{{ $label }}</span>
-                                <span class="leave-sort-icon" aria-hidden="true">{{ $sortIcon }}</span>
+                                <span class="leave-sort-icon">{{ $sortIcon }}</span>
                             </a>
                         </th>
                     @endforeach
-                    <th scope="col">Hành động</th>
+                    <th>Hành động</th>
                 </tr>
             </thead>
             <tbody>

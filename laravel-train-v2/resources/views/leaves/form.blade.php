@@ -93,15 +93,14 @@
                                 title="{{ $leave->attachment_original_name }}">{{ $leave->attachment_original_name }}</span>
                             <span class="leave-upload-icon"></span>
                         </div>
-                        <button type="button" id="leave-preview-button" class="leave-preview-button" aria-label="Xem ảnh đính kèm"
-                            aria-haspopup="dialog" aria-controls="leave-preview-dialog" title="Xem ảnh đính kèm" hidden>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                        <button type="button" id="leave-preview-button" class="leave-preview-button" title="Xem ảnh đính kèm" hidden>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                 <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
                                 <circle cx="12" cy="12" r="3" />
                             </svg>
                         </button>
                     </div>
-                    <p id="leave-attachment-error" class="leave-form-error" data-form-error="attachment" role="alert" hidden></p>
+                    <p id="leave-attachment-error" class="leave-form-error" data-form-error="attachment" hidden></p>
                 </div>
             </div>
 
@@ -111,7 +110,7 @@
             </div>
         </form>
     </main>
-    <dialog id="leave-preview-dialog" class="leave-preview-dialog" aria-label="Xem ảnh đính kèm">
+    <dialog id="leave-preview-dialog" class="leave-preview-dialog">
         <img id="leave-file-preview" class="leave-file-preview" alt="Ảnh xem trước tệp đính kèm" draggable="false">
     </dialog>
 @endsection
