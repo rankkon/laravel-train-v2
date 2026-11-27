@@ -17,12 +17,16 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Js;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\InArray;
 use Illuminate\View\View;
+use Psy\Util\Json;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Throwable;
+
+use function PHPUnit\Framework\throwException;
 
 class LeaveController extends Controller
 {
@@ -34,7 +38,7 @@ class LeaveController extends Controller
     // Hiển thị danh sách đơn theo quyền xem
     public function index(Request $request) : View {
         $viewer = $request->user();
-        $search = $request->query('q',''); // Tìm từ khóa tìm kiếm (nếu có)
+        $search = $request->query('search',''); // Tìm từ khóa tìm kiếm (nếu có)
         $sortColumn = $request->query('sort',''); // Tìm cột áp dụng sort (nếu có)
         $sortDirection = $request->query('direction') === 'desc' ? 'desc' : "asc";
         $query = Leave::join('users', 'users.id', '=', 'leave.user_id');
@@ -44,7 +48,7 @@ class LeaveController extends Controller
         }
 
         // Xử lý tìm kiếm đơn
-        if($request->filled('q')){
+        if($request->filled('search')){
             $keyword = '%' .$search. '%';
             $query->where(function(Builder $matches) use($keyword): void {
                 $matches->where('users.full_name', 'like', $keyword)->orwhere('leave.title', 'like', $keyword);
@@ -160,6 +164,41 @@ class LeaveController extends Controller
         return response()-> json(['redirect' => route('leaves.index')]);
     }
 
+    // Duyệt đơn
+    public function approve(Leave $leave) : JsonResponse {
+        return $this->process($leave, [
+            'status' => AppConstants::STATUS_APPROVED,
+            'update_at' => now(),
+            'approved_at' => today()->toDateString()
+        ]);
+    }
+
+    // Hủy đơn
+    public function cancel(Request $request, Leave $leave) : JsonResponse {
+        $data = $request->validate(['cancel_reason' => 'required']);
+
+        return $this->process($leave, $data + [
+            'status' => AppConstants::STATUS_CANCELLED,
+            'delete_at' => now()
+        ]);
+    }
+
+    // Xử lý cập nhật trạng thái đơn
+    private function process(Leave $leave, array $changes) : JsonResponse {
+        DB::beginTransaction();
+        try {
+            $leave = Leave::where('id', $leave->id)->lockForUpdate()->first();
+            abort_if($leave === null || $leave->user === null, 404);
+            $leave->update($changes);
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+        return response()->json([]);
+    }
+
+    // Lấy danh sách người duyệt
     private function approvers(User $user) : Collection {
         $query = User::where('status', AppConstants::STATUS_ACTIVE);
         if($user->user_type === AppConstants::TYPE_USER){
@@ -168,5 +207,35 @@ class LeaveController extends Controller
             $query->where('user_type', AppConstants::TYPE_ADMIN);
         }
         return $query->orderBy('id')->get(['id', 'full_name']);
+    }
+
+    // Xử lý lưu file đính kèm
+    private function storeAttachment(Request $request): array
+    {
+        // Chỉ thay file nếu có chọn file mới
+        if (! $request->hasFile('attachment')) {
+            return [];
+        }
+        $file = $request->file('attachment');
+        $path = $file->store('leaves', 'local');
+        throw_if($path === false, RuntimeException::class, __('messages.attachment_write_failed'));
+        DB::afterRollBack(fn () => $this->deleteUnusedAttachment($path));
+
+        return [
+            'attachment_original_name' => $file->getClientOriginalName(),
+            'attachment_path'          => $path,
+        ];
+    }
+
+    // Xóa file đính kèm không sử dụng khi lưu thất bại
+    private function deleteUnusedAttachment(string $path): void
+    {
+        try {
+            if (! Leave::where('attachment_path', $path)->exists()) {
+                throw_if(! Storage::disk('local')->delete($path), 'Không xóa được tệp đính kèm.');
+            }
+        } catch (Throwable $e) {
+            report($e);
+        }
     }
 }

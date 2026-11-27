@@ -1,5 +1,4 @@
 <dialog id="confirmation" class="popup-dialog"
-    aria-labelledby="confirmation-title"
     data-save="{{ __('messages.confirm_save') }}"
     data-clear="{{ __('messages.confirm_clear') }}"
     data-exit="{{ __('messages.confirm_exit') }}"

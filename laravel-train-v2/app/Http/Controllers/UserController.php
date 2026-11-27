@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -29,7 +30,7 @@ class UserController extends Controller
     // Hiển thị danh sách user theo quyền người xem
     public function index(Request $request) : View {
         $viewer        = $request->user();
-        $search        = $request->query('q',''); // Tìm từ khóa tìm kiếm (nếu có)
+        $search        = $request->query('search',''); // Tìm từ khóa tìm kiếm (nếu có)
         $sortColumn    = $request->query('sort',''); // Tìm cột áp dụng sort (nếu có)
         $statusFilter  = $request->query('status', ''); // Lấy bộ lọc áp dụng (nếu có)
         $sortDirection = $request->query('direction') === 'desc' ? 'desc' : "asc";
@@ -40,7 +41,7 @@ class UserController extends Controller
         }
 
         // Xử lý tìm kiếm users
-        if($request->filled('q')){
+        if($request->filled('search')){
             $keyword = '%' .$search. '%';
             $query->where(function (Builder $matches) use($keyword) : void {
                 $matches->whereRaw("LPAD(id, ?, '0') LIKE ?", [AppConstants::USER_CODE_LENGTH, $keyword])-> orWhere('full_name', 'like', $keyword);
@@ -190,26 +191,24 @@ class UserController extends Controller
             'user_ids'   => ['required', 'array', 'min:1'],
             'user_ids.*' => ['required', 'integer', 'min:1', 'distinct'],
         ]);
-        $ids = $data['user_ids'];
+        $ids    = $data['user_ids'];
         $viewer = $request->user();
 
         DB::beginTransaction();
         try {
-            $query = User::whereIn('id', $ids);
+            $query = User::whereIn('id', $ids); // Lấy danh sách các user được chọn
             if ($viewer->user_type === AppConstants::TYPE_MANAGER) {
-                $query->where('user_type', AppConstants::TYPE_USER)
-                    ->where('department', $viewer->department);
+                $query->where('user_type', AppConstants::TYPE_USER)->where('department', $viewer->department); // Manager chỉ được khóa các tài khoản là user
+            }
+            if($viewer->user_type === AppConstants::TYPE_ADMIN){
+                $query->where('user_type', '!=', AppConstants::TYPE_ADMIN); // Admin có thể khóa tất cả user, trừ bản thân
             }
 
             $users = $query->orderBy('id')->lockForUpdate()->get();
 
-            abort_if(
-                $users->count() !== count($ids),
-                404,
-                'Không tìm thấy một hoặc nhiều tài khoản trong phạm vi quản lý.'
-            );
+            abort_if($users->count() !== count($ids), 404, 'Không tìm thấy một hoặc nhiều tài khoản trong phạm vi quản lý.');
 
-            User::whereIn('id', $users->modelKeys())->update(['status' => AppConstants::STATUS_LOCKED]);
+            User::whereIn('id', $ids)->update(['status' => AppConstants::STATUS_LOCKED]);
 
             DB::commit();
         } catch (Throwable $e) {

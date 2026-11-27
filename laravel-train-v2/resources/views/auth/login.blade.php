@@ -3,9 +3,9 @@
 @section('title', 'Đăng nhập')
 @section('body-class', 'login-page')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}?v={{ filemtime(public_path('css/login.css')) }}">
-@endpush
+@section('styles')
+     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+@endsection
 
 @section('body')
     <div class="login-surface">
@@ -20,31 +20,13 @@
                 <div class="login-field login-username">
                     <label for="username">Tên đăng nhập</label>
                     <span class="required-marker">*</span>
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        value="{{ $username }}"
-                        @if ($usernameError) class="login-input-error" autofocus @endif
-                        placeholder=" "
-                        required
-                    >
-                    <span class="login-placeholder">Tên đăng nhập</span>
+                    <input type="text" id="username" name="username" value="{{ $username }}" @if ($usernameError) class="login-input-error" autofocus @endif placeholder="Tên đăng nhập" required>
                 </div>
 
                 <div class="login-field login-password">
                     <label for="password">Mật khẩu</label>
                     <span class="required-marker">*</span>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        @if ($passwordError) class="login-input-error" @endif
-                        @if ($passwordError && ! $usernameError) autofocus @endif
-                        placeholder=" "
-                        required
-                    >
-                    <span class="login-placeholder">Mật khẩu</span>
+                    <input type="password" id="password" name="password" @if ($passwordError) class="login-input-error" @endif @if ($passwordError && ! $usernameError) autofocus @endif placeholder="Mật khẩu" required>
                     @include('components.password-toggle')
                 </div>
 

@@ -124,11 +124,11 @@ if (leaveForm) {
         message.hidden      = false;
     }
 
-    // Gửi PATCH để duyệt hoặc hủy đơn, rồi tải lại danh sách nếu thành công.
+    // Gửi POST để duyệt hoặc hủy đơn, rồi tải lại danh sách nếu thành công.
     async function processLeave(url, reason) {
         try {
             await withLoading(async () => {
-                const options = {method: 'PATCH'};
+                const options = {method: 'POST'};
                 if (reason !== undefined) {
                     options.headers = {'Content-Type': 'application/json'};
                     options.body    = JSON.stringify({cancel_reason: reason});

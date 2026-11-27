@@ -2,12 +2,12 @@
 
 @section('title', 'Đặt mật khẩu mới')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}?v={{ filemtime(public_path('css/login.css')) }}">
-@endpush
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+@endsection
 
 @section('content')
-    <dialog id="password-setup-dialog" class="popup-dialog password-setup-dialog" closedby="none" aria-labelledby="password-setup-title" aria-describedby="password-setup-description">
+    <dialog id="password-setup-dialog" class="popup-dialog password-setup-dialog" closedby="none" aria-labelledby="password-setup-title">
         <div class="popup-header">
             <h2 id="password-setup-title" class="popup-title">{{ __('messages.password_setup_title') }}</h2>
         </div>
@@ -20,13 +20,13 @@
                 <div>
                     <label for="new-password">Mật khẩu mới <span class="password-setup-required">*</span></label>
                     <input type="password" id="new-password" name="password" autocomplete="new-password" required
-                        aria-describedby="new-password-error" data-required-message="{{ __('validation.custom.password.required') }}">
+                        data-required-message="{{ __('validation.custom.password.required') }}">
                     <p id="new-password-error" class="password-setup-error" data-form-error="password" role="alert" hidden></p>
                 </div>
                 <div>
                     <label for="password-confirmation">Xác nhận mật khẩu <span class="password-setup-required">*</span></label>
                     <input type="password" id="password-confirmation" name="password_confirmation" autocomplete="new-password" required
-                        aria-describedby="password-confirmation-error" data-mismatch-message="{{ __('validation.custom.password.confirmed') }}">
+                        data-mismatch-message="{{ __('validation.custom.password.confirmed') }}">
                     <p id="password-confirmation-error" class="password-setup-error" data-form-error="password_confirmation" role="alert" hidden></p>
                 </div>
                 <p class="password-setup-error" data-form-error="form" role="alert" hidden></p>
@@ -38,7 +38,7 @@
     </dialog>
 @endsection
 
-@push('scripts')
+@section('scripts')
     <script>
         const passwordDialog = document.getElementById('password-setup-dialog');
         const passwordForm   = document.getElementById('password-setup-form');
@@ -85,4 +85,4 @@
             }
         });
     </script>
-@endpush
+@endsection

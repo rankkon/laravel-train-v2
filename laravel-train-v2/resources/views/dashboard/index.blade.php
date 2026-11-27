@@ -1,21 +1,16 @@
-@extends('layouts.base')
+@extends('layouts.app')
 
 @section('title', 'Dashboard')
 @section('body-class', 'leave-list-page leave-list-screen')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/leave_list.css') }}?v={{ filemtime(public_path('css/leave_list.css')) }}">
-@endpush
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/leave_list.css') }}">
+@endsection
 
-@section('body')
-    @include('layouts.header')
-
-    @include('components.sidebar')
-
+@section('content')
     <main class="leave-list">
         <div class="leave-list-toolbar"></div>
 
-        {{-- Hai lớp bao tách cuộn ngang và cuộn dọc; danh sách đã được controller lọc quyền và sắp xếp. --}}
         <div class="leave-table-container">
             <div class="leave-table-scroll">
                 <table class="leave-table">
@@ -31,7 +26,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- Hiển thị đơn theo trạng thái Mới, Đã duyệt, Đã hủy và xử lý trường hợp danh sách rỗng. --}}
                         @forelse ($leaves as $leave)
                             <tr class="leave-row leave-status-{{ $leave->status }}">
                                 <td>{{ $leaves->firstItem() + $loop->index }}</td> {{-- STT tiếp tục theo số trang đang xem. --}}

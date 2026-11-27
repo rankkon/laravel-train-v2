@@ -3,10 +3,10 @@
 @section('title', 'Danh sách người dùng')
 @section('body-class', 'leave-list-page leave-list-screen user-list-screen')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/leave_list.css') }}?v={{ filemtime(public_path('css/leave_list.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/user_list.css') }}?v={{ filemtime(public_path('css/user_list.css')) }}">
-@endpush
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/leave_list.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/user_list.css') }}">
+@endsection
 
 @section('content')
     <main class="leave-list">
@@ -17,6 +17,6 @@
     </main>
 @endsection
 
-@push('scripts')
+@section('scripts')
     <script src="{{ asset('js/users.js') }}" defer></script>
-@endpush
+@endsection

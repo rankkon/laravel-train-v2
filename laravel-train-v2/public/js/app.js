@@ -52,6 +52,21 @@ async function refreshList(url, container) {
 }
 
 const recordForm = document.querySelector('[data-record-form]');
+const initialValues = recordForm ? new URLSearchParams(new FormData(recordForm)).toString() : '';
+
+// So sánh với dữ liệu lúc mở form để phát hiện thay đổi chưa lưu.
+function hasChanges() {
+    if (!recordForm) return false;
+
+    return new URLSearchParams(new FormData(recordForm)).toString() !== initialValues
+        || Boolean(recordForm.querySelector('input[type="file"]')?.files.length);
+}
+
+const logoutForm = document.getElementById('logout-form');
+document.getElementById('logout-button').addEventListener('click', () => {
+    const message = hasChanges() ? confirmation.dataset.logoutChanges : confirmation.dataset.logout;
+    showConfirmation(message, () => logoutForm.requestSubmit());
+});
 
 // Hiện hoặc xóa thông báo lỗi và viền đỏ của một ô nhập.
 function showFieldError(field, message, form = recordForm) {
@@ -77,15 +92,8 @@ function clearFieldErrors(form) {
 
 // Xử lý chung cho form thêm và sửa người dùng hoặc đơn nghỉ phép.
 if (recordForm) {
-    const initialValues = new URLSearchParams(new FormData(recordForm)).toString();
-    let allowLeave      = false;
+    let allowLeave = false;
     recordForm.noValidate = true;
-
-    // So sánh với dữ liệu lúc mở form để phát hiện thay đổi chưa lưu.
-    function hasChanges() {
-        return new URLSearchParams(new FormData(recordForm)).toString() !== initialValues
-            || Boolean(recordForm.querySelector('input[type="file"]')?.files.length);
-    }
 
     function clearErrors() {
         clearFieldErrors(recordForm);
@@ -153,11 +161,7 @@ if (recordForm) {
             }
         });
     });
-    document.getElementById('logout-confirm-toggle').addEventListener('change', () => {
-        document.querySelector('.logout-confirm-popup .popup-message').textContent = hasChanges()
-            ? confirmation.dataset.logoutChanges : confirmation.dataset.logout;
-    });
-    document.querySelector('.logout-confirm-popup form').addEventListener('submit', () => { allowLeave = true; });
+    logoutForm.addEventListener('submit', () => { allowLeave = true; });
     window.addEventListener('beforeunload', event => {
         if (!allowLeave && hasChanges()) {
             event.preventDefault();

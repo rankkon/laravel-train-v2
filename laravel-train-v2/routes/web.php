@@ -23,16 +23,17 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 Route::get('/password', [AuthController::class, 'showPasswordEdit'])->name('password.edit');
 Route::post('/password', [AuthController::class, 'setPassword'])->name('password.update');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Nhóm quản lý người dùng
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::post('/users', [UserController::class, 'store'])->name('users.store');
 Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
 Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-Route::patch('/users/bulk-lock', [UserController::class, 'bulkLock'])->name('users.bulk-lock');
-Route::patch('/users/{user}/lock', [UserController::class, 'lock'])->name('users.lock');
-Route::patch('/users/{user}/unlock', [UserController::class, 'unlock'])->name('users.unlock');
+Route::post('/users/bulk-lock', [UserController::class, 'bulkLock'])->name('users.bulk-lock');
+Route::post('/users/{user}', [UserController::class, 'update'])->name('users.update');
+Route::post('/users/{user}/lock', [UserController::class, 'lock'])->name('users.lock');
+Route::post('/users/{user}/unlock', [UserController::class, 'unlock'])->name('users.unlock');
 
 // Nhóm quản lý đơn
 Route::get('/leaves', [LeaveController::class, 'index'])->name('leaves.index');
@@ -40,8 +41,7 @@ Route::get('/leaves/create', [LeaveController::class, 'create'])->name('leaves.c
 Route::post('/leaves', [LeaveController::class, 'store'])->name('leaves.store');
 Route::get('/leaves/{leave}/edit', [LeaveController::class, 'edit'])->name('leaves.edit');
 Route::get('/leaves/{leave}/preview', [LeaveController::class, 'preview'])->name('leaves.preview');
-Route::put('/leaves/{leave}', [LeaveController::class, 'update'])->name('leaves.update');
-Route::patch('/leaves/{leave}/approve', [LeaveController::class, 'approve'])->name('leaves.approve');
-Route::patch('/leaves/{leave}/cancel', [LeaveController::class, 'cancel'])->name('leaves.cancel');
+Route::post('/leaves/{leave}', [LeaveController::class, 'update'])->name('leaves.update');
+Route::post('/leaves/{leave}/approve', [LeaveController::class, 'approve'])->name('leaves.approve');
+Route::post('/leaves/{leave}/cancel', [LeaveController::class, 'cancel'])->name('leaves.cancel');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

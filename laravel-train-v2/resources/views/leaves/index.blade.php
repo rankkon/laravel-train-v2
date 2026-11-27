@@ -3,9 +3,9 @@
 @section('title', 'Danh sách đơn')
 @section('body-class', 'leave-list-page leave-list-screen')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/leave_list.css') }}?v={{ filemtime(public_path('css/leave_list.css')) }}">
-@endpush
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/leave_list.css') }}">
+@endsection
 
 @section('content')
     <main class="leave-list">
@@ -17,6 +17,6 @@
     @include('leaves.partials.cancel-dialog')
 @endsection
 
-@push('scripts')
+@section('scripts')
     <script src="{{ asset('js/leaves.js') }}" defer></script>
-@endpush
+@endsection

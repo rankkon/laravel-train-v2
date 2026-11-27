@@ -1,33 +1,32 @@
 @extends('layouts.app')
+@use('App\Constants\AppConstants')
 
 @section('title', $user->exists ? 'Sửa người dùng' : 'Thêm mới người dùng')
 @section('body-class', 'user-create-page')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/user_form.css') }}?v={{ filemtime(public_path('css/user_form.css')) }}">
-@endpush
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/user_form.css') }}">
+@endsection
 
 @section('content')
     <main class="user-create">
         <h1 class="user-form-title">{{ $user->exists ? 'Sửa người dùng' : 'Thêm mới người dùng' }}</h1>
-        <form method="post" action="{{ $user->exists ? route('users.update', $user) : route('users.store') }}" id="user-form" class="user-form" data-record-form data-error-class="user-input-error">
+        <form method="post" action="{{ $user->exists ? route('users.update', $user) : route('users.store') }}"
+            id="user-form" class="user-form" data-record-form data-error-class="user-input-error">
             @csrf
-            @if ($user->exists)
-                @method('PUT')
-            @endif
             <div class="user-form-fields">
                 <p class="user-field-error" data-form-error="form" hidden></p>
                 <div class="user-form-field">
                     <label for="username"><span class="required-marker">*</span> Tên đăng nhập</label>
                     <input type="text" id="username" name="username" value="{{ $user->username }}"
-                        maxlength="50" required @disabled($user->exists) aria-describedby="username-error"
+                        maxlength="50" required @disabled($user->exists)
                         data-required-message="{{ __('validation.custom.username.required') }}">
                     <p id="username-error" class="user-field-error" data-form-error="username" hidden></p>
                 </div>
                 <div class="user-form-field">
                     <label for="full-name"><span class="required-marker">*</span> Tên người dùng</label>
                     <input type="text" id="full-name" name="full_name" value="{{ $user->full_name }}"
-                        maxlength="100" required aria-describedby="full-name-error"
+                        maxlength="100" required
                         data-required-message="{{ __('validation.custom.full_name.required') }}">
                     <p id="full-name-error" class="user-field-error" data-form-error="full_name" hidden></p>
                 </div>
@@ -36,7 +35,7 @@
                         <label for="password">Mật khẩu mới</label>
                         {{-- Khi sửa, đây là mật khẩu mới; để trống sẽ giữ mật khẩu hiện có. --}}
                         <div class="password-control">
-                            <input type="password" id="password" name="password" minlength="8" aria-describedby="password-error"
+                            <input type="password" id="password" name="password" minlength="8"
                                 data-invalid-message="{{ __('validation.custom.password.min', ['min' => 8]) }}">
                             @include('components.password-toggle')
                         </div>
@@ -46,14 +45,14 @@
                 <div class="user-form-field">
                     <label for="email"><span class="required-marker">*</span> Email</label>
                     <input type="email" id="email" name="email" value="{{ $user->email }}" maxlength="254" required
-                        aria-describedby="email-error" data-required-message="{{ __('validation.custom.email.required') }}"
+                        data-required-message="{{ __('validation.custom.email.required') }}"
                         data-invalid-message="{{ __('validation.custom.email.email') }}">
                     <p id="email-error" class="user-field-error" data-form-error="email" hidden></p>
                 </div>
                 <div class="user-form-field user-form-date">
                     <label for="birth-date">Ngày sinh</label>
                     <input type="date" id="birth-date" name="birth_date" value="{{ $user->birth_date?->format('Y-m-d') }}"
-                        max="{{ today()->toDateString() }}" aria-describedby="birth-date-error"
+                        max="{{ today()->toDateString() }}"
                         data-invalid-message="{{ __('validation.custom.birth_date.before_or_equal') }}">
                     <p id="birth-date-error" class="user-field-error" data-form-error="birth_date" hidden></p>
                 </div>
@@ -61,9 +60,9 @@
                     <label for="user-type"><span class="required-marker">*</span> Loại người dùng</label>
                     <div class="user-select-control">
                         <select id="user-type" name="user_type" required
-                            aria-describedby="user-type-error" data-required-message="{{ __('validation.custom.user_type.in') }}">
+                            data-required-message="{{ __('validation.custom.user_type.in') }}">
                             @foreach ($userTypes as $code => $name)
-                                <option value="{{ $code }}" @selected(($user->user_type ?? \App\Constants\AppConstants::TYPE_USER) === $code)>{{ $name }}</option>
+                                <option value="{{ $code }}" @selected(($user->user_type ?? AppConstants::TYPE_USER) === $code)>{{ $name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -72,7 +71,7 @@
                 <div class="user-form-field">
                     <label for="department"><span class="required-marker">*</span> Phòng ban</label>
                     <div class="user-select-control">
-                        <select id="department" name="department" required aria-describedby="department-error"
+                        <select id="department" name="department" required
                             data-required-message="{{ __('validation.custom.department.in') }}">
                             @foreach ($departments as $code => $name)
                                 <option value="{{ $code }}" @selected(($user->department ?? array_key_first($departments)) === $code)>{{ $name }}</option>
@@ -84,7 +83,7 @@
             </div>
             <div class="user-form-actions">
                 <button type="submit" class="user-form-next">Lưu</button>
-                <button type="button" id="clear-user-form" data-clear-form class="user-form-clear">Xóa trống</button>
+                <button type="button" data-clear-form class="user-form-clear">Xóa trống</button>
             </div>
         </form>
     </main>

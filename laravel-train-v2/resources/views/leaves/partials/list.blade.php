@@ -33,7 +33,6 @@
                             $isSorted       = $sortColumn === $column;
                             $nextDirection  = $isSorted ? ($sortDirection === 'asc' ? 'desc' : '') : 'asc';
                             $sortIcon       = $isSorted ? ($sortDirection === 'asc' ? '↑' : '↓') : '↕';
-                            $ariaSort       = $isSorted ? ($sortDirection === 'asc' ? 'ascending' : 'descending') : 'none';
                             $sortParameters = ['q' => $search];
                             $sortAction     = 'trở về thứ tự mặc định';
                             if ($nextDirection !== '') {
@@ -42,7 +41,7 @@
                                 $sortAction                  = $nextDirection === 'asc' ? 'sắp xếp tăng dần' : 'sắp xếp giảm dần';
                             }
                         @endphp
-                        <th scope="col" aria-sort="{{ $ariaSort }}">
+                        <th scope="col" @if ($isSorted) aria-sort="{{ $sortDirection === 'asc' ? 'ascending' : 'descending' }}" @endif>
                             <a href="{{ route('leaves.index', $sortParameters) }}"
                                class="leave-sort-link{{ $isSorted ? ' leave-sort-active' : '' }}"
                                aria-label="{{ $label }}: {{ $sortAction }}">

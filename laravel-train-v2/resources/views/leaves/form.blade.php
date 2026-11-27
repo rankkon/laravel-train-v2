@@ -3,27 +3,22 @@
 @section('title', $leave->exists ? 'Sửa đơn' : 'Thêm mới đơn')
 @section('body-class', 'leave-list-page leave-create-page')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/leave_form.css') }}?v={{ filemtime(public_path('css/leave_form.css')) }}">
-@endpush
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/leave_form.css') }}">
+@endsection
 
 @section('content')
     <main class="leave-list leave-create">
         <h1 class="leave-form-title">{{ $leave->exists ? 'Sửa đơn' : 'Thêm mới đơn' }}</h1>
-
-        {{-- Form thêm/sửa đơn gửi cả dữ liệu và file bằng multipart/form-data, không lưu dữ liệu form vào session. --}}
         <form id="leave-form" class="leave-form" method="post" action="{{ $leave->exists ? route('leaves.update', $leave) : route('leaves.store') }}"
             enctype="multipart/form-data" data-record-form data-error-class="leave-input-error">
             @csrf
-            @if ($leave->exists)
-                @method('PUT')
-            @endif
             <div class="leave-form-fields">
                 <p class="leave-form-error" data-form-error="form" hidden></p>
                 <div class="leave-form-field">
                     <label for="leave-title"><span class="required-marker">*</span> Tiêu đề</label>
                     <input type="text" id="leave-title" name="title" value="{{ $leave->title }}" maxlength="255" required
-                        aria-describedby="leave-title-error" data-required-message="{{ __('validation.custom.title.required') }}">
+                        data-required-message="{{ __('validation.custom.title.required') }}">
                     <p id="leave-title-error" class="leave-form-error" data-form-error="title" hidden></p>
                 </div>
 
@@ -36,7 +31,7 @@
                 <div class="leave-form-field">
                     <label for="leave-approver"><span class="required-marker">*</span> Người duyệt</label>
                     <div class="leave-select-control">
-                        <select id="leave-approver" name="approver_id" required aria-describedby="leave-approver-error"
+                        <select id="leave-approver" name="approver_id" required
                             data-required-message="{{ __('validation.custom.approver_id.required') }}">
                             @foreach ($approvers as $approver)
                                 <option value="{{ $approver->id }}" @selected($leave->approver_id === $approver->id)>{{ $approver->full_name }}</option>
@@ -52,7 +47,7 @@
                 <div class="leave-form-field leave-form-type">
                     <label for="leave-type"><span class="required-marker">*</span> Loại đơn</label>
                     <div class="leave-select-control">
-                        <select id="leave-type" name="leave_type" required aria-describedby="leave-type-error"
+                        <select id="leave-type" name="leave_type" required
                             data-required-message="{{ __('validation.custom.leave_type.required') }}">
                             @foreach (\App\Constants\AppConstants::LEAVE_TYPES as $code => $name)
                                 <option value="{{ $code }}" @selected($leave->leave_type === $code)>{{ $name }}</option>
@@ -67,7 +62,7 @@
                     <label for="leave-start-date"><span class="required-marker">*</span> Ngày bắt đầu</label>
                     <div class="leave-date-control">
                         <input type="date" id="leave-start-date" name="start_date" value="{{ $leave->start_date->toDateString() }}"
-                            @if (!$leave->exists) min="{{ today()->toDateString() }}" @endif required aria-describedby="leave-start-date-error"
+                            @if (!$leave->exists) min="{{ today()->toDateString() }}" @endif required
                             data-required-message="{{ __('validation.custom.start_date.required') }}"
                             data-min-message="{{ __('validation.custom.start_date.after_or_equal') }}">
                     </div>
@@ -78,7 +73,7 @@
                     <label for="leave-end-date"><span class="required-marker">*</span> Ngày kết thúc</label>
                     <div class="leave-date-control">
                         <input type="date" id="leave-end-date" name="end_date" value="{{ $leave->end_date->toDateString() }}" required
-                            aria-describedby="leave-end-date-error" data-required-message="{{ __('validation.custom.end_date.required') }}"
+                            data-required-message="{{ __('validation.custom.end_date.required') }}"
                             data-min-message="{{ __('validation.custom.end_date.after_or_equal') }}">
                     </div>
                     <p id="leave-end-date-error" class="leave-form-error" data-form-error="end_date" hidden></p>
@@ -92,7 +87,7 @@
                             <input type="file" id="leave-attachment" name="attachment" accept=".jpg,.jpeg,.png,.gif,.webp,.bmp"
                                 data-preview-url="{{ $leave->attachment_path ? route('leaves.preview', $leave) : '' }}"
                                 data-invalid-message="{{ __('validation.custom.attachment.mimes') }}"
-                                data-checking-message="{{ __('messages.processing') }}" aria-describedby="leave-attachment-error"
+                                data-checking-message="{{ __('messages.processing') }}"
                                 title="{{ __('messages.attachment_hint') }}">
                             <span id="leave-file-name" class="leave-file-name" data-original-name="{{ $leave->attachment_original_name }}"
                                 title="{{ $leave->attachment_original_name }}">{{ $leave->attachment_original_name }}</span>
@@ -121,6 +116,6 @@
     </dialog>
 @endsection
 
-@push('scripts')
+@section('scripts')
     <script src="{{ asset('js/leaves.js') }}" defer></script>
-@endpush
+@endsection

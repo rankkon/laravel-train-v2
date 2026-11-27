@@ -7,7 +7,7 @@
         <div class="leave-cancel-fields">
             <label for="cancel-reason">Lý do hủy đơn <span class="leave-cancel-required">*</span></label>
             <textarea id="cancel-reason" name="cancel_reason" class="leave-cancel-reason" required
-                aria-describedby="cancel-error" data-required-message="{{ __('validation.custom.cancel_reason.required') }}"></textarea>
+                data-required-message="{{ __('validation.custom.cancel_reason.required') }}"></textarea>
             <p id="cancel-error" class="leave-process-error" data-form-error="cancel_reason" role="alert" hidden></p>
             <p class="leave-process-error" data-form-error="form" role="alert" hidden></p>
         </div>

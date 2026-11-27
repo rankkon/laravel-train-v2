@@ -103,39 +103,17 @@
     color: #0D0C0C;
 }
 
+.login-page .login-field input::placeholder {
+    color: rgba(0, 0, 0, 0.4);
+    opacity: 1;
+}
+
 .login-page .login-password input {
     padding-right: 40px;
 }
 
 .login-page .password-toggle {
     top: 7px;
-}
-
-.login-page .login-placeholder {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    height: 40px;
-    left: 144px;
-    top: 3px;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 15.992px;
-    color: rgba(0, 0, 0, 0.4);
-    white-space: nowrap;
-    pointer-events: none;
-}
-
-.login-page .login-username .login-placeholder {
-    width: 97px;
-}
-
-.login-page .login-password .login-placeholder {
-    width: 61px;
-}
-
-.login-page .login-field input:not(:placeholder-shown) + .login-placeholder {
-    visibility: hidden;
 }
 
 .login-page .required-marker {
